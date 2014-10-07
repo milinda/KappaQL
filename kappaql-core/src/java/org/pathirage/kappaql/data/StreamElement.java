@@ -78,4 +78,24 @@ public class StreamElement {
 
         return newElement;
     }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    public long getGlobalClock() {
+        return globalClock;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

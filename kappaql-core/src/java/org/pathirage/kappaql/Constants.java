@@ -18,5 +18,18 @@
 package org.pathirage.kappaql;
 
 public class Constants {
+    public static final String CONST_STR_UNDEFINED = "undefined";
+    public static final String CONST_STR_DEFAULT_SYSTEM = "kafka";
+
     public static final String CONF_QUERY_ID = "org.pathirage.kappaql.query.id";
+    public static final String CONF_SYSTEM = "org.pathirage.kappaql.system";
+    public static final String CONF_DOWN_STREAM_TOPIC = "org.pathirage.kappaql.downstream.topic";
+
+    public static final String CONF_WINDOW_RANGE = "org.pathirage.kappaql.window.range";
+    public static final String CONF_WINDOW_RANGE_SLOT_SIZE = "org.pathirage.kappaql.window.range.slot.size";
+    public static final String CONF_WINDOW_ROWS = "org.pathirage.kappaql.window.rows";
+
+
+    public static final String ERROR_UNDEFINED_OUTPUT_STREAM = "Undefined output stream.";
+    public static final String WARN_BOTH_ROWS_AND_RANGE_DEFINED = "Both time based and tuple based windows are defined. Priority goes to time based windows.";
 }
