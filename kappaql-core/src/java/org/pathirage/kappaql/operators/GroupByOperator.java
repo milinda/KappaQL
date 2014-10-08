@@ -21,10 +21,19 @@ import org.apache.samza.config.Config;
 import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.task.*;
 
+/**
+ * Divide input stream into multiple output streams based on the group by key.
+ *
+ * 10/08/2014
+ * ----------
+ * Main issue with group-by operator is lack of support for dynamic routing. Because we don't know the cardinality
+ * of the group-by attribute its hard to do static planning. Current solution is to use Kafka topic's partitioning to
+ * parallelize the execution among multiple down stream aggregators.
+ */
 public class GroupByOperator extends Operator implements StreamTask, InitableTask {
     @Override
     public void init(Config config, TaskContext taskContext) throws Exception {
-
+        initOperator(OperatorType.GROUP_BY);
     }
 
     @Override

@@ -77,27 +77,14 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
     /* Current size of the window to handle handle/drop events to/from window as needed. */
     private AtomicLong currentWindowSize = new AtomicLong(0);
 
-    /* Topic to push the downstream. */
-    private String downStreamTopic;
-
-    /* Samza System */
-    private String system;
-
     /* Window handler. */
     private WindowHandler windowHandler;
 
     @Override
     public void init(Config config, TaskContext taskContext) throws Exception {
-        initOperator(config.get(Constants.CONF_QUERY_ID, Constants.CONST_STR_UNDEFINED), OperatorType.WINDOW);
+        this.config = config;
 
-        String downStreamTopic = config.get(Constants.CONF_DOWN_STREAM_TOPIC, Constants.CONST_STR_UNDEFINED);
-        if (downStreamTopic.equals(Constants.CONST_STR_UNDEFINED)) {
-            log.error(Constants.ERROR_UNDEFINED_OUTPUT_STREAM);
-            throw new KappaQLException(Constants.ERROR_UNDEFINED_OUTPUT_STREAM);
-        }
-
-        this.downStreamTopic = downStreamTopic;
-        this.system = config.get(Constants.CONF_SYSTEM, Constants.CONST_STR_DEFAULT_SYSTEM);
+        initOperator(OperatorType.WINDOW);
 
         String range = config.get(Constants.CONF_WINDOW_RANGE, Constants.CONST_STR_UNDEFINED);
         if (!range.equals(Constants.CONST_STR_UNDEFINED)) {
@@ -124,6 +111,11 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
 
         this.store = (KeyValueStore<String, QueueNode>) taskContext.getStore("windowing-synopses");
         this.metadataStore = (KeyValueStore<String, String>) taskContext.getStore("windowing-metadata");
+
+        if(this.tupleBased && !this.timeBased){
+            this.windowHandler = new TupleBasedSlidingWindowHandler(this.rows, store, metadataStore, this.system);
+        }
+
         this.windowSizeGauge = taskContext.getMetricsRegistry().newGauge(getClass().getName(), "window-size", 0);
     }
 
@@ -147,33 +139,6 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
         public void handle(StreamElement streamElement, MessageCollector messageCollector);
     }
 
-    public class ExtendedEvictingQueue<T> {
-        private EvictingQueue<T> queue;
-        private int maxSize;
-
-        private ExtendedEvictingQueue(int maxSize) {
-            this.maxSize = maxSize;
-            this.queue = EvictingQueue.create(maxSize);
-        }
-
-        /* This is special extension of evicting queue. If queue is full we return
-         * the element we are removed from the queue to handle the new one. Otherwise null
-         * is returned. */
-        public T add(T t) {
-            if (queue.size() == maxSize) {
-                T r = queue.peek();
-
-                queue.add(t);
-
-                return r;
-            }
-
-            queue.add(t);
-
-            return null;
-        }
-    }
-
     public class TupleBasedSlidingWindowHandler implements WindowHandler {
         private int maxSize;
         private KeyValueStore<String, String> metadataStore;
@@ -184,7 +149,6 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
         public TupleBasedSlidingWindowHandler(int maxSize,
                                               KeyValueStore<String, QueueNode> store,
                                               KeyValueStore<String, String> metadataStore,
-                                              MessageCollector messageCollector,
                                               String system) {
             this.maxSize = maxSize;
             this.metadataStore = metadataStore;
@@ -199,12 +163,14 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
                 /* Sending element deleted from window to down stream for processing.
                  * Need to set delete property to of StreamElement true. */
                 evicted.setDelete(true);
-                messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic), evicted.getId(), evicted));
+                messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic),
+                        evicted.getId(), evicted));
             }
 
             /* Sending insert to window element to down stream for processing. */
             streamElement.setDelete(false);
-            messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic), streamElement));
+            messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic),
+                    streamElement));
         }
     }
 }
