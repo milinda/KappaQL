@@ -28,11 +28,25 @@ import org.apache.samza.task.*;
 import org.pathirage.kappaql.Constants;
 import org.pathirage.kappaql.KappaQLException;
 import org.pathirage.kappaql.data.StreamElement;
+import org.pathirage.kappaql.utils.KVStorageBackedEvictingQueue;
+import org.pathirage.kappaql.utils.QueueNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Sliding window operator reads the input stream's tuples from input queue, update the sliding-window
+ * synopsis, and outputs the insertion and deletions to this window to the output queues.
+ * <p/>
+ * 10/08/2014
+ * ----------
+ * - Only handles the tuple based sliding windows.
+ * - Recovery is handled by persistent synopsis storage and Kafka queue. If the operator goes down, last successful
+ * synopsis update will be there in local storage and last read tuple will be tracked internally by Samza. Upon
+ * restart input stream read will last from the last read tuple and can recover the synopsis from local storage
+ * assuming operator get restarted in same node.
+ */
 public class WindowOperator extends Operator implements StreamTask, InitableTask {
     private static Logger log = LoggerFactory.getLogger(WindowOperator.class);
 
@@ -53,7 +67,9 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
 
     /* CQL uses concept called synopses to implement windowing. This stores
      * synopsis as key/value pairs. This assumes every stream element has unique id. */
-    private KeyValueStore<String, StreamElement> store;
+    private KeyValueStore<String, QueueNode> store;
+
+    private KeyValueStore<String, String> metadataStore;
 
     /* Window size gauge metric for reporting */
     private Gauge windowSizeGauge;
@@ -84,11 +100,11 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
         this.system = config.get(Constants.CONF_SYSTEM, Constants.CONST_STR_DEFAULT_SYSTEM);
 
         String range = config.get(Constants.CONF_WINDOW_RANGE, Constants.CONST_STR_UNDEFINED);
-        if(!range.equals(Constants.CONST_STR_UNDEFINED)){
+        if (!range.equals(Constants.CONST_STR_UNDEFINED)) {
             this.range = Long.valueOf(range);
 
             String slotSize = config.get(Constants.CONF_WINDOW_RANGE_SLOT_SIZE, Constants.CONST_STR_UNDEFINED);
-            if(!slotSize.equals(Constants.CONST_STR_UNDEFINED)){
+            if (!slotSize.equals(Constants.CONST_STR_UNDEFINED)) {
                 this.slotSize = Long.valueOf(slotSize);
             } else {
                 this.slotSize = this.range;
@@ -98,7 +114,7 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
         }
 
         String rows = config.get(Constants.CONF_WINDOW_ROWS, Constants.CONST_STR_UNDEFINED);
-        if(!rows.equals(Constants.CONST_STR_UNDEFINED) && range.equals(Constants.CONST_STR_UNDEFINED)){
+        if (!rows.equals(Constants.CONST_STR_UNDEFINED) && range.equals(Constants.CONST_STR_UNDEFINED)) {
             this.rows = Integer.valueOf(rows);
             timeBasedWindow(false);
         } else {
@@ -106,18 +122,19 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
             log.warn(Constants.WARN_BOTH_ROWS_AND_RANGE_DEFINED);
         }
 
-        this.store = (KeyValueStore<String, StreamElement>) taskContext.getStore("windowing-synopses");
+        this.store = (KeyValueStore<String, QueueNode>) taskContext.getStore("windowing-synopses");
+        this.metadataStore = (KeyValueStore<String, String>) taskContext.getStore("windowing-metadata");
         this.windowSizeGauge = taskContext.getMetricsRegistry().newGauge(getClass().getName(), "window-size", 0);
     }
 
     @Override
     public void process(IncomingMessageEnvelope incomingMessageEnvelope,
                         MessageCollector messageCollector, TaskCoordinator taskCoordinator) throws Exception {
-        windowHandler.handle((StreamElement)incomingMessageEnvelope.getMessage(), messageCollector);
+        windowHandler.handle((StreamElement) incomingMessageEnvelope.getMessage(), messageCollector);
     }
 
-    private void timeBasedWindow(boolean b){
-        if(b){
+    private void timeBasedWindow(boolean b) {
+        if (b) {
             this.timeBased = true;
             this.tupleBased = false;
         } else {
@@ -159,34 +176,31 @@ public class WindowOperator extends Operator implements StreamTask, InitableTask
 
     public class TupleBasedSlidingWindowHandler implements WindowHandler {
         private int maxSize;
-        private KeyValueStore<String, StreamElement> store;
-        private ExtendedEvictingQueue<String> evictingQueue;
+        private KeyValueStore<String, String> metadataStore;
+        private KeyValueStore<String, QueueNode> store;
+        private KVStorageBackedEvictingQueue evictingQueue;
         private String system;
 
         public TupleBasedSlidingWindowHandler(int maxSize,
-                                       KeyValueStore<String, StreamElement> store,
-                                       MessageCollector messageCollector,
-                                       String system) {
+                                              KeyValueStore<String, QueueNode> store,
+                                              KeyValueStore<String, String> metadataStore,
+                                              MessageCollector messageCollector,
+                                              String system) {
             this.maxSize = maxSize;
+            this.metadataStore = metadataStore;
             this.store = store;
-            this.evictingQueue = new ExtendedEvictingQueue<String>(maxSize);
+            this.evictingQueue = new KVStorageBackedEvictingQueue(maxSize, this.store, this.metadataStore);
             this.system = system;
         }
 
         public void handle(StreamElement streamElement, MessageCollector messageCollector) {
-            String evicted = evictingQueue.add(streamElement.getId());
+            StreamElement evicted = evictingQueue.add(streamElement.getId(), streamElement);
             if (evicted != null) {
-                StreamElement evictedElement = store.get(evicted);
-                store.delete(evicted);
-
                 /* Sending element deleted from window to down stream for processing.
                  * Need to set delete property to of StreamElement true. */
-                evictedElement.setDelete(true);
-                messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic), evictedElement.getId(), evictedElement));
+                evicted.setDelete(true);
+                messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic), evicted.getId(), evicted));
             }
-
-            /* Store the element for synopsis management */
-            store.put(streamElement.getId(), streamElement);
 
             /* Sending insert to window element to down stream for processing. */
             streamElement.setDelete(false);
