@@ -48,6 +48,10 @@ public class StreamElement {
         this.fields = ImmutableMap.copyOf(fields);
     }
 
+    public Object getField(String fieldName) {
+        return fields.get(fieldName);
+    }
+
     public String getStringField(String fieldName){
         return (String)fields.get(fieldName);
     }

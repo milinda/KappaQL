@@ -17,13 +17,24 @@
 
 package org.pathirage.kappaql.operators;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Ordering;
 import org.apache.samza.config.Config;
 import org.apache.samza.system.IncomingMessageEnvelope;
+import org.apache.samza.system.OutgoingMessageEnvelope;
+import org.apache.samza.system.SystemStream;
 import org.apache.samza.task.*;
+import org.pathirage.kappaql.Constants;
+import org.pathirage.kappaql.KappaQLException;
+import org.pathirage.kappaql.data.StreamElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Divide input stream into multiple output streams based on the group by key.
- *
+ * <p/>
  * 10/08/2014
  * ----------
  * Main issue with group-by operator is lack of support for dynamic routing. Because we don't know the cardinality
@@ -31,13 +42,51 @@ import org.apache.samza.task.*;
  * parallelize the execution among multiple down stream aggregators.
  */
 public class GroupByOperator extends Operator implements StreamTask, InitableTask {
+    private static final Logger log = LoggerFactory.getLogger(GroupByOperator.class);
+
+    /* Order is important. */
+    private List<String> groupByFields;
+
     @Override
     public void init(Config config, TaskContext taskContext) throws Exception {
         initOperator(OperatorType.GROUP_BY);
+
+        /* Comma separated values of group by fields */
+        String groupByFields = config.get(Constants.CONF_GROUPBY_FIELDS, Constants.CONST_STR_UNDEFINED);
+
+        if (groupByFields.equals(Constants.CONST_STR_UNDEFINED)) {
+            throw new KappaQLException(Constants.ERROR_UNDEFINED_GROUP_BY_FIELDS);
+        }
+
+
+        this.groupByFields = Arrays.asList(groupByFields.split("\\s*,\\s*"));
+        Collections.sort(this.groupByFields, Ordering.usingToString());
     }
 
     @Override
-    public void process(IncomingMessageEnvelope incomingMessageEnvelope, MessageCollector messageCollector, TaskCoordinator taskCoordinator) throws Exception {
+    public void process(IncomingMessageEnvelope incomingMessageEnvelope,
+                        MessageCollector messageCollector,
+                        TaskCoordinator taskCoordinator) throws Exception {
+        StreamElement se = (StreamElement) incomingMessageEnvelope.getMessage();
 
+        /* Based on group by fields we create new key for the message. This key is used to partitioned messages
+         * from different group to different partition.
+         *
+         * 10/08/2014
+         * ----------
+         * I assume Samza creates one partition for each group dynamically.
+         * I assumes this code maintains the order of fields.
+         * TODO: Test the order maintenance. */
+        List<Object> values = new LinkedList<Object>();
+        for (String f : groupByFields) {
+            values.add(se.getField(f));
+        }
+
+        String partitionKey = Joiner.on("-").skipNulls().join(values);
+
+        messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic),
+                partitionKey,
+                se.getId(),
+                se));
     }
 }

@@ -18,7 +18,7 @@
 package org.pathirage.kappaql;
 
 public class Constants {
-    public static final String CONST_STR_UNDEFINED = "undefined";
+    public static final String CONST_STR_UNDEFINED = "kappaql.undefined";
     public static final String CONST_STR_DEFAULT_SYSTEM = "kafka";
 
     public static final String CONF_QUERY_ID = "org.pathirage.kappaql.query.id";
@@ -29,7 +29,13 @@ public class Constants {
     public static final String CONF_WINDOW_RANGE_SLOT_SIZE = "org.pathirage.kappaql.window.range.slot.size";
     public static final String CONF_WINDOW_ROWS = "org.pathirage.kappaql.window.rows";
 
+    public static final String CONF_GROUPBY_FIELDS = "org.pathirage.kappaql.groupby.fields";
+
 
     public static final String ERROR_UNDEFINED_OUTPUT_STREAM = "Undefined output stream.";
+    public static final String ERROR_UNABLE_TO_FIND_CONFIGURATION = "Unable to find the configuration.";
+    public static final String ERROR_UNDEFINED_OPERATOR_TYPE = "Undefined operator type.";
+    public static final String ERROR_UNDEFINED_GROUP_BY_FIELDS = "Undefined group by fields.";
+
     public static final String WARN_BOTH_ROWS_AND_RANGE_DEFINED = "Both time based and tuple based windows are defined. Priority goes to time based windows.";
 }

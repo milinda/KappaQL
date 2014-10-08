@@ -20,12 +20,15 @@ package org.pathirage.kappaql.operators;
 import org.apache.samza.config.Config;
 import org.pathirage.kappaql.Constants;
 import org.pathirage.kappaql.KappaQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
 /* In KappaQL, query is transformed in to execution plan which consists of DAG of operators(Samza jobs) connected via
  * Kakfa queues. */
 public abstract class Operator {
+    private static final Logger log = LoggerFactory.getLogger(Operator.class);
 
     /* Type of the query operator */
     private OperatorType type;
@@ -46,7 +49,8 @@ public abstract class Operator {
 
     protected void initOperator(OperatorType type){
         if(config == null){
-            throw new KappaQLException("Unable to find the configuration.");
+            log.error(Constants.ERROR_UNABLE_TO_FIND_CONFIGURATION);
+            throw new KappaQLException(Constants.ERROR_UNABLE_TO_FIND_CONFIGURATION);
         }
 
         this.type = type;
@@ -55,7 +59,8 @@ public abstract class Operator {
         if(type != null){
             this.id = type + "-" + this.queryId + "-" + UUID.randomUUID();
         } else {
-            throw new KappaQLException("Operator type not defined.");
+            log.error(Constants.ERROR_UNDEFINED_OPERATOR_TYPE);
+            throw new KappaQLException(Constants.ERROR_UNDEFINED_OPERATOR_TYPE);
         }
 
         String downStreamTopic = config.get(Constants.CONF_DOWN_STREAM_TOPIC, Constants.CONST_STR_UNDEFINED);
