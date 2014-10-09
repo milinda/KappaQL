@@ -15,10 +15,9 @@
  *
  */
 
-package org.pathirage.kappaql.utils;
+package clojure.kappaql.utils;
 
-
-import org.pathirage.kappaql.data.StreamElement;
+import clojure.kappaql.data.StreamElement;
 
 public class QueueNode {
     private String next;

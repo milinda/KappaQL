@@ -15,38 +15,13 @@
  *
  */
 
-package org.pathirage.kappaql.utils;
+package org.pathirage.kappaql.operators;
 
-
-import org.pathirage.kappaql.data.StreamElement;
-
-public class QueueNode {
-    private String next;
-    private String prev;
-    private StreamElement value;
-
-
-    public String getNext() {
-        return next;
-    }
-
-    public void setNext(String next) {
-        this.next = next;
-    }
-
-    public String getPrev() {
-        return prev;
-    }
-
-    public void setPrev(String prev) {
-        this.prev = prev;
-    }
-
-    public StreamElement getValue() {
-        return value;
-    }
-
-    public void setValue(StreamElement value) {
-        this.value = value;
-    }
+public enum AggregateType {
+    SUM,
+    AVG,
+    MIN,
+    MAX,
+    COUNT,
+    COUNT_DISTINCT
 }

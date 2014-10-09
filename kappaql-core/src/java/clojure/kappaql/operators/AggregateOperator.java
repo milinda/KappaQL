@@ -15,12 +15,12 @@
  *
  */
 
-package org.pathirage.kappaql.operators;
+package clojure.kappaql.operators;
 
 import org.apache.samza.config.Config;
 import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.task.*;
-import org.pathirage.kappaql.data.StreamElement;
+import clojure.kappaql.data.StreamElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

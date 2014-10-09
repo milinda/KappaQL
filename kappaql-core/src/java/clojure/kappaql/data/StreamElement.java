@@ -15,7 +15,7 @@
  *
  */
 
-package org.pathirage.kappaql.data;
+package clojure.kappaql.data;
 
 import com.google.common.collect.ImmutableMap;
 

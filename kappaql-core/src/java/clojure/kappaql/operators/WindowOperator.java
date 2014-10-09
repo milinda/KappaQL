@@ -15,7 +15,7 @@
  *
  */
 
-package org.pathirage.kappaql.operators;
+package clojure.kappaql.operators;
 
 import org.apache.samza.config.Config;
 import org.apache.samza.metrics.Gauge;
@@ -24,10 +24,11 @@ import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.system.OutgoingMessageEnvelope;
 import org.apache.samza.system.SystemStream;
 import org.apache.samza.task.*;
-import org.pathirage.kappaql.Constants;
-import org.pathirage.kappaql.data.StreamElement;
-import org.pathirage.kappaql.utils.KVStorageBackedEvictingQueue;
-import org.pathirage.kappaql.utils.QueueNode;
+import clojure.kappaql.Constants;
+import clojure.kappaql.KappaQLException;
+import clojure.kappaql.data.StreamElement;
+import clojure.kappaql.utils.KVStorageBackedEvictingQueue;
+import clojure.kappaql.utils.QueueNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

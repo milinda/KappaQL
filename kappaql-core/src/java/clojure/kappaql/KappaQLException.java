@@ -15,38 +15,26 @@
  *
  */
 
-package org.pathirage.kappaql.utils;
+package clojure.kappaql;
 
-
-import org.pathirage.kappaql.data.StreamElement;
-
-public class QueueNode {
-    private String next;
-    private String prev;
-    private StreamElement value;
-
-
-    public String getNext() {
-        return next;
+public class KappaQLException extends RuntimeException {
+    public KappaQLException() {
+        super();
     }
 
-    public void setNext(String next) {
-        this.next = next;
+    public KappaQLException(String message) {
+        super(message);
     }
 
-    public String getPrev() {
-        return prev;
+    public KappaQLException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setPrev(String prev) {
-        this.prev = prev;
+    public KappaQLException(Throwable cause) {
+        super(cause);
     }
 
-    public StreamElement getValue() {
-        return value;
-    }
-
-    public void setValue(StreamElement value) {
-        this.value = value;
+    protected KappaQLException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

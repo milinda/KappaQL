@@ -15,7 +15,7 @@
  *
  */
 
-package org.pathirage.kappaql;
+package clojure.kappaql;
 
 public class Constants {
     public static final String CONST_STR_UNDEFINED = "kappaql.undefined";

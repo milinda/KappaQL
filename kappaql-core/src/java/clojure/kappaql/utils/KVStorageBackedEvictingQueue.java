@@ -15,10 +15,10 @@
  *
  */
 
-package org.pathirage.kappaql.utils;
+package clojure.kappaql.utils;
 
 import org.apache.samza.storage.kv.KeyValueStore;
-import org.pathirage.kappaql.data.StreamElement;
+import clojure.kappaql.data.StreamElement;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

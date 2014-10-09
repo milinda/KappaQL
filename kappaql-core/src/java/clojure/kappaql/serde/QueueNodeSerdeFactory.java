@@ -15,14 +15,14 @@
  *
  */
 
-package org.pathirage.kappaql.serde;
+package clojure.kappaql.serde;
 
 import com.esotericsoftware.kryo.Kryo;
 import org.apache.samza.config.Config;
 import org.apache.samza.serializers.Serde;
 import org.apache.samza.serializers.SerdeFactory;
-import org.pathirage.kappaql.data.StreamElement;
-import org.pathirage.kappaql.utils.QueueNode;
+import clojure.kappaql.data.StreamElement;
+import clojure.kappaql.utils.QueueNode;
 
 public class QueueNodeSerdeFactory implements SerdeFactory<QueueNode>{
     private static Kryo kryo = new Kryo();

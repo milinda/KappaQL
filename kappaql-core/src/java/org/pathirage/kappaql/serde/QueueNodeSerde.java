@@ -21,8 +21,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.apache.samza.serializers.Serde;
-import org.pathirage.kappaql.operators.WindowOperator;
-import org.pathirage.kappaql.utils.KVStorageBackedEvictingQueue;
 import org.pathirage.kappaql.utils.QueueNode;
 
 public class QueueNodeSerde implements Serde<QueueNode> {
