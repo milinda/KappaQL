@@ -7,7 +7,7 @@ originally by LinkedIn engineers [Jay
 Kreps](https://twitter.com/jaykreps) and [Martin
 Kleppmann](http://martin.kleppmann.com).
 
-References
+## References
 
 *  Arasu, Arvind, Shivnath Babu, and Jennifer Widom. "[The CQL continuous query language: semantic foundations and query execution.](http://ilpubs.stanford.edu:8090/758/1/2003-67.pdf)" The VLDB Journal—The International Journal on Very Large Data Bases 15.2 (2006): 121-142.
 
