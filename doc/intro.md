@@ -13,7 +13,7 @@ The general concept of DB. Web app architecture, you have a client talking to ba
 
 Look at 4 example which inspire us to think differently.
 
-1. Replication - Write to master/leader, any writes that lead to this copied over to slaves/followers.
+1. *Replication* - Write to master/leader, any writes that lead to this copied over to slaves/followers.
 
 Update the product quantity in sample DB. Write first goes to master. Different implementations (WAL, Logical Log).
 
@@ -31,7 +31,36 @@ old = [123, 999, 1]
 new= [123, 999, 3]
 ```
 
-2. 
+From imperative statement to event that is being replicated. It state certain point in time customer decided to change the quantity. This is a immutable fact.
+
+2. *Secondary Indexes* - Allow table to query by different field. Create indexes for multiple column. What does the DB do for these queries. It will go through the entire table and create auxiliary data structure for the indexes. Each index have separate data structures looks like key/value pairs.
+
+Prices of going from base table to index is completely mechanical. When ever the change happen to DB, DB will update the index. Some DBs like Postgres allow concurrent index creations.
+
+3. *Caching* - Application level caching (memcached, redis). Manage the cache in application code. First look in cache, if not in cache go to underlying DB.
+
+Problems
+ - Invalidation: How do you when to update the cache so that it represent whats in the DB
+ - Race conditions/consistency issues: Update DB in one order and cache in other order. People ignore this.
+- Cold start/bootstrapping: Will hit the DB for all requests if cache goes down and came back empty.
+
+4 *Materialize Views* 
+
+```
+CREATE VIEW example(foo)
+AS SELECT foo 
+      FROM bar
+     WHERE ..
+```
+
+Wrapper around the table. DB will re-write the query.
+
+Materialize view is different. When you create materialize view, DB will scan the table and copy the query results to the materialized view. DB needs to maintain this materialize view with the changes to underlying DB. 
+
+This is similar to cache.
+
+Some DBs allow arbitrary code inside a procedure. 
+ 
 
 ## Design and Implementation
 
