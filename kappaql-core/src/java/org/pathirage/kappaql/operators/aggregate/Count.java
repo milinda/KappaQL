@@ -15,37 +15,21 @@
  *
  */
 
-package clojure.kappaql.utils;
+package org.pathirage.kappaql.operators.aggregate;
 
-import clojure.kappaql.data.StreamElement;
+import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamElement;
 
-public class QueueNode {
-    private String next;
-    private String prev;
-    private StreamElement value;
+public class Count extends AggregateFunction{
 
-
-    public String getNext() {
-        return next;
+    public Count(String field, String alias){
+        this.field = field;
+        this.alias = alias;
+        this.type = AggregateType.COUNT;
     }
 
-    public void setNext(String next) {
-        this.next = next;
-    }
+    @Override
+    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
 
-    public String getPrev() {
-        return prev;
-    }
-
-    public void setPrev(String prev) {
-        this.prev = prev;
-    }
-
-    public StreamElement getValue() {
-        return value;
-    }
-
-    public void setValue(StreamElement value) {
-        this.value = value;
     }
 }

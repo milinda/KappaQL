@@ -15,10 +15,18 @@
  *
  */
 
-package clojure.kappaql.operators;
+package org.pathirage.kappaql.operators.aggregate;
 
-/**
- * Materialize relations generated into a persistent storage for use by applications.
- */
-public class MaterializeOperator {
+import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamElement;
+
+public abstract class AggregateFunction {
+
+    protected AggregateType type;
+
+    protected String field;
+
+    protected String alias;
+
+    public void handle(StreamElement streamElement, MessageCollector messageCollector){}
 }

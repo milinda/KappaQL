@@ -15,12 +15,21 @@
  *
  */
 
-package clojure.kappaql.operators;
+package org.pathirage.kappaql.operators.aggregate;
 
-public enum OperatorType {
-    WINDOW,
-    SELECT,
-    PROJECT,
-    GROUP_BY,
-    AGGREGATE
+import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamElement;
+
+public class Max extends AggregateFunction {
+
+    public Max(String field, String alias){
+        this.field = field;
+        this.alias = alias;
+        this.type = AggregateType.MAX;
+    }
+
+    @Override
+    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
+
+    }
 }

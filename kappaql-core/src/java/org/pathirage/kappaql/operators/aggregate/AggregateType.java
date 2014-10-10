@@ -15,7 +15,7 @@
  *
  */
 
-package clojure.kappaql.operators;
+package org.pathirage.kappaql.operators.aggregate;
 
 public enum AggregateType {
     SUM,

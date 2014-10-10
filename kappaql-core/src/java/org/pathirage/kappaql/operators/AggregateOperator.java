@@ -20,20 +20,28 @@ package org.pathirage.kappaql.operators;
 import org.apache.samza.config.Config;
 import org.apache.samza.system.IncomingMessageEnvelope;
 import org.apache.samza.task.*;
-import org.pathirage.kappaql.data.StreamElement;
+import org.pathirage.kappaql.Constants;
+import org.pathirage.kappaql.operators.aggregate.AggregateFunction;
+import org.pathirage.kappaql.operators.aggregate.AggregateFunctionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class AggregateOperator extends Operator implements StreamTask, InitableTask {
     private static final Logger log = LoggerFactory.getLogger(AggregateOperator.class);
 
-    private AggregateType type;
-
-    private AggregateFunction aggregateFunction;
+    /* Aggregates map. Single query can have multiple aggregates. */
+    private List<AggregateFunction> aggregates;
 
     @Override
     public void init(Config config, TaskContext taskContext) throws Exception {
+        /* To specify the aggregates, let assume we use prefixed property with 1, 2, 3, .. to specify the order. */
+        Config aggregatesConfig = config.subset(Constants.CONF_AGGREGATE_AGGREGATES);
 
+        for(int i = 0; i < aggregatesConfig.size(); i++){
+            aggregates.add(i, AggregateFunctionFactory.buildAggregateFunction(aggregatesConfig.get(Integer.toString(i), Constants.CONST_STR_UNDEFINED)));
+        }
     }
 
     @Override
@@ -41,50 +49,6 @@ public class AggregateOperator extends Operator implements StreamTask, InitableT
                         MessageCollector messageCollector,
                         TaskCoordinator taskCoordinator) throws Exception {
 
-    }
-
-    public interface AggregateFunction {
-        public void handle(StreamElement streamElement, MessageCollector messageCollector);
-    }
-
-    public class Sum implements AggregateFunction{
-
-        @Override
-        public void handle(StreamElement streamElement, MessageCollector messageCollector) {
-
-        }
-    }
-
-    public class Count implements AggregateFunction{
-
-        @Override
-        public void handle(StreamElement streamElement, MessageCollector messageCollector) {
-
-        }
-    }
-
-    public class Min implements AggregateFunction {
-
-        @Override
-        public void handle(StreamElement streamElement, MessageCollector messageCollector) {
-
-        }
-    }
-
-    public class Max implements AggregateFunction {
-
-        @Override
-        public void handle(StreamElement streamElement, MessageCollector messageCollector) {
-
-        }
-    }
-
-    public class Average implements AggregateFunction {
-
-        @Override
-        public void handle(StreamElement streamElement, MessageCollector messageCollector) {
-
-        }
     }
 
 }

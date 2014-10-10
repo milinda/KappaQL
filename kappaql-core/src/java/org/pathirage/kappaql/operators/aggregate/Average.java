@@ -15,25 +15,21 @@
  *
  */
 
-package clojure.kappaql.serde;
+package org.pathirage.kappaql.operators.aggregate;
 
-import com.esotericsoftware.kryo.Kryo;
-import org.apache.samza.config.Config;
-import org.apache.samza.serializers.Serde;
-import org.apache.samza.serializers.SerdeFactory;
-import clojure.kappaql.data.StreamElement;
-import clojure.kappaql.utils.QueueNode;
+import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamElement;
 
-public class QueueNodeSerdeFactory implements SerdeFactory<QueueNode>{
-    private static Kryo kryo = new Kryo();
+public class Average extends AggregateFunction {
 
-    static {
-        kryo.register(QueueNode.class);
-        kryo.register(StreamElement.class);
+    public Average(String field, String alias){
+        this.field = field;
+        this.alias = alias;
+        this.type = AggregateType.AVG;
     }
 
     @Override
-    public Serde<QueueNode> getSerde(String s, Config config) {
-        return new QueueNodeSerde(kryo);
+    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
+
     }
 }

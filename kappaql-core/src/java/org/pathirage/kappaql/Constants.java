@@ -21,16 +21,20 @@ public class Constants {
     public static final String CONST_STR_UNDEFINED = "kappaql.undefined";
     public static final String CONST_STR_DEFAULT_SYSTEM = "kafka";
 
-    public static final String CONF_QUERY_ID = "clojure.kappaql.query.id";
-    public static final String CONF_SYSTEM = "clojure.kappaql.system";
-    public static final String CONF_DOWN_STREAM_TOPIC = "clojure.kappaql.downstream.topic";
+    public static final String CONF_QUERY_ID = "org.pathirage.kappaql.query.id";
+    public static final String CONF_SYSTEM = "org.pathirage.kappaql.system";
+    public static final String CONF_DOWN_STREAM_TOPIC = "org.pathirage.kappaql.downstream.topic";
 
-    public static final String CONF_WINDOW_RANGE = "clojure.kappaql.window.range";
-    public static final String CONF_WINDOW_RANGE_SLOT_SIZE = "clojure.kappaql.window.range.slot.size";
-    public static final String CONF_WINDOW_ROWS = "clojure.kappaql.window.rows";
+    public static final String CONF_WINDOW_RANGE = "org.pathirage.kappaql.window.range";
+    public static final String CONF_WINDOW_RANGE_SLOT_SIZE = "org.pathirage.kappaql.window.range.slot.size";
+    public static final String CONF_WINDOW_ROWS = "org.pathirage.kappaql.window.rows";
 
-    public static final String CONF_GROUPBY_FIELDS = "clojure.kappaql.groupby.fields";
+    public static final String CONF_GROUPBY_FIELDS = "org.pathirage.kappaql.groupby.fields";
 
+    public static final String CONF_AGGREGATE_AGGREGATES = "org.pathirage.kappaql.aggregate.aggregrates.";
+    public static final String CONF_AGGREGATE_TYPE = "type";
+    public static final String CONF_AGGREGATE_FIELD = "field";
+    public static final String CONF_AGGREGATE_ALIAS = "alias";
 
     public static final String ERROR_UNDEFINED_OUTPUT_STREAM = "Undefined output stream.";
     public static final String ERROR_UNABLE_TO_FIND_CONFIGURATION = "Unable to find the configuration.";

@@ -15,26 +15,21 @@
  *
  */
 
-package clojure.kappaql;
+package org.pathirage.kappaql.operators.aggregate;
 
-public class KappaQLException extends RuntimeException {
-    public KappaQLException() {
-        super();
+import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamElement;
+
+public class Sum extends AggregateFunction{
+
+    public Sum(String field, String alias){
+        this.field = field;
+        this.alias = alias;
+        this.type = AggregateType.SUM;
     }
 
-    public KappaQLException(String message) {
-        super(message);
-    }
+    @Override
+    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
 
-    public KappaQLException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public KappaQLException(Throwable cause) {
-        super(cause);
-    }
-
-    protected KappaQLException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

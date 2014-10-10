@@ -15,24 +15,21 @@
  *
  */
 
-package clojure.kappaql.serde;
+package org.pathirage.kappaql.operators.aggregate;
 
-import com.esotericsoftware.kryo.Kryo;
-import org.apache.samza.config.Config;
-import org.apache.samza.serializers.Serde;
-import org.apache.samza.serializers.SerdeFactory;
-import clojure.kappaql.data.StreamElement;
+import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamElement;
 
-public class StreamElementSerdeFactory implements SerdeFactory<StreamElement> {
+public class Min extends AggregateFunction {
 
-    private static Kryo kryo = new Kryo();
-
-    static {
-        kryo.register(StreamElement.class);
+    public Min(String field, String alias){
+        this.field = field;
+        this.alias = alias;
+        this.type = AggregateType.MIN;
     }
 
     @Override
-    public Serde<StreamElement> getSerde(String s, Config config) {
-        return new StreamElementSerde(kryo);
+    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
+
     }
 }
