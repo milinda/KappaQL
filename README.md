@@ -11,6 +11,7 @@ Kleppmann](http://martin.kleppmann.com).
 
 *  Arasu, Arvind, Shivnath Babu, and Jennifer Widom. "[The CQL continuous query language: semantic foundations and query execution.](http://ilpubs.stanford.edu:8090/758/1/2003-67.pdf)" The VLDB Journal—The International Journal on Very Large Data Bases 15.2 (2006): 121-142.
 *  Jan Van den Bussche, and Stijn Vansummeren. "[Translating SQL into the Relational Algebra](http://cs.ulb.ac.be/public/_media/teaching/infoh417/sql2alg_eng.pdf)"
+*  Rajaraman, Anand, and Jeffrey David Ullman. [Mining of massive datasets](http://www.mmds.org). Cambridge University Press, 2011.
 
 ## License
 
