@@ -9,6 +9,29 @@ Kleppmann](http://martin.kleppmann.com).
 
 ## What Is Kappa Architecture?
 
+The general concept of DB. Web app architecture, you have a client talking to backend and backend talks to DB when it needs to query or store. Typically we keep application layer stateless to handle scalability, and state will be look from the DB. Works well with HTTP, because HTTP is stateless. DB is giant, global shared state. All those things such as actors, go routine trying to get rid of global shared memory. But databases are stuck with giant global mutable state. This is the way we building it for ages. What are the other possibilities of building these  stateful systems.
+
+Look at 4 example which inspire us to think differently.
+
+1. Replication - Write to master/leader, any writes that lead to this copied over to slaves/followers.
+
+Update the product quantity in sample DB. Write first goes to master. Different implementations (WAL, Logical Log).
+
+The replication message has a different characteristic for query
+
+```
+update cart set quantity = 3 where customer_id = 123 and product_id = 999
+```
+
+But replication message to slaves can be like following.
+
+```
+change row 8765
+old = [123, 999, 1]
+new= [123, 999, 3]
+```
+
+2. 
 
 ## Design and Implementation
 
