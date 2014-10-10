@@ -60,6 +60,35 @@ Materialize view is different. When you create materialize view, DB will scan th
 This is similar to cache.
 
 Some DBs allow arbitrary code inside a procedure. 
+
+All 4 above have commonality is all forms of derived data. Take underlying dataset and transform it to different form.
+
+### Let's rethink materialized view
+
+Ideal architecture for something like cache/materialized view.
+
+Think of the replication scenario, and look at the replication event log. Take this internal details about replication and make it a first class citizen. 
+
+Append the *writes* to the stream, and stream becomes a really simple data structure. Appending to a file at the end. Read is simple. Kafka implements this.
+
+You can write to it efficiently, but read is not efficient. We can consume this stream and write to materialized view. Stream processing framework, process incoming message, transform it and write to some kind of a view. 
+
+Interesting thing is if you need to create a new way, go to Kafka and replay from the beginning and create the new view.
+
+Kapa architecture, no bath processing. Materialized view building in the stream processing system.
+
+Whole architecture is based around idea of a log. Whats the point?
+
+3 interesting things
+
+1. Better quality data - Whether to optimize for writes or reads. When separate the writes and reads, you can create different views with different de-normalization for efficient/rich reads. You can re-run it the view generation at any time. 
+    > 1. Good for analytics. Shopping cart example
+    > 2. Separation of concerns between writing and reading
+    > 3. Write once, read from many different views
+    > 4. Historical point-int-time queries
+    > 5. Recovery from human errors. 
+2. Fully precomputed caches - Materialized view is fully pre-computed cache. No such thing as cold start. No cache miss. No race conditions. No complete invalidation. Better isolations/robustness.
+3.
  
 
 ## Design and Implementation
