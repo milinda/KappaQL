@@ -13,6 +13,15 @@ Kleppmann](http://martin.kleppmann.com).
 *  Jan Van den Bussche, and Stijn Vansummeren. "[Translating SQL into the Relational Algebra](http://cs.ulb.ac.be/public/_media/teaching/infoh417/sql2alg_eng.pdf)"
 *  Rajaraman, Anand, and Jeffrey David Ullman. [Mining of massive datasets](http://www.mmds.org). Cambridge University Press, 2011.
 
+
+## Inspirations and Dependencies
+
+* [sqlingvo](https://github.com/r0man/sqlingvo)
+* [clojure-sql](https://bitbucket.org/czan/clojure-sql)
+* [parsatron](https://github.com/youngnh/parsatron)
+* [instaparse](https://github.com/Engelberg/instaparse)
+* [parsley](https://github.com/cgrand/parsley)
+
 ## License
 
 Copyright © 2014 Milinda Pathirage
