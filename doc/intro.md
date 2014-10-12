@@ -88,7 +88,7 @@ Whole architecture is based around idea of a log. Whats the point?
     > 4. Historical point-int-time queries
     > 5. Recovery from human errors. 
 2. Fully precomputed caches - Materialized view is fully pre-computed cache. No such thing as cold start. No cache miss. No race conditions. No complete invalidation. Better isolations/robustness.
-3.
+3. Streams Everywhere - Compare with traditional web app flow (web app -> business logic (Not in good state/ subscription to changes) -> cache -> UI Logic (F Reactive) -> HTML Dom -> Video Render). Consider this as a mattered view on top of the other. Log centric architecture. Materialized views which get updated as streams coming in, clients subscribe to these views and use functional reactive programming to update the UI. Weakest point is the DB end. Instead of Request/Response, Subscribe/Notify. Throw away REST. Build apps for future.
  
 
 ## Design and Implementation
