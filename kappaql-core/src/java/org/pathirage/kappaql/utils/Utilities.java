@@ -15,23 +15,15 @@
  *
  */
 
-package org.pathirage.kappaql.operators.aggregate;
+package org.pathirage.kappaql.utils;
 
-import org.apache.samza.task.MessageCollector;
-import org.pathirage.kappaql.data.StreamDefinition;
-import org.pathirage.kappaql.data.StreamElement;
+import com.google.common.base.Splitter;
 
 import java.util.Map;
 
-public abstract class AggregateFunction {
-
-    protected AggregateType type;
-
-    protected String field;
-
-    protected String alias;
-
-    protected Map<String, StreamDefinition> inputStreamDefs;
-
-    public void handle(String stream, StreamElement streamElement, MessageCollector messageCollector){}
+public class Utilities {
+    public static Map<String, String> parseMap(String formattedMap) {
+        return Splitter.on(",").withKeyValueSeparator("=").split(formattedMap);
+    }
 }
+

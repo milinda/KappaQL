@@ -20,12 +20,14 @@ package org.pathirage.kappaql.operators.aggregate;
 import com.google.common.base.Splitter;
 import org.pathirage.kappaql.Constants;
 import org.pathirage.kappaql.KappaQLException;
+import org.pathirage.kappaql.data.StreamDefinition;
+import org.pathirage.kappaql.utils.Utilities;
 
 import java.util.Map;
 
 public class AggregateFunctionFactory {
-    public static AggregateFunction buildAggregateFunction(String config){
-        Map<String, String> aggregateConfig = parseMap(config);
+    public static AggregateFunction buildAggregateFunction(String config, Map<String, StreamDefinition> inputStreamDefs){
+        Map<String, String> aggregateConfig = Utilities.parseMap(config);
 
         AggregateType type = AggregateType.valueOf(aggregateConfig.get(Constants.CONF_AGGREGATE_TYPE));
         String field = aggregateConfig.get(Constants.CONF_AGGREGATE_FIELD);
@@ -33,21 +35,17 @@ public class AggregateFunctionFactory {
 
         switch (type) {
             case AVG:
-                return new Average(field, alias);
+                return new Average(field, alias, inputStreamDefs);
             case SUM:
-                return new Sum(field, alias);
+                return new Sum(field, alias, inputStreamDefs);
             case MAX:
-                return new Max(field, alias);
+                return new Max(field, alias, inputStreamDefs);
             case MIN:
-                return new Min(field, alias);
+                return new Min(field, alias, inputStreamDefs);
             case COUNT:
-                return new Count(field, alias);
+                return new Count(field, alias, inputStreamDefs);
             default:
                 throw new KappaQLException("Unsupported aggregate type.");
         }
-    }
-
-    private static Map<String, String> parseMap(String formattedMap) {
-        return Splitter.on(",").withKeyValueSeparator("=").split(formattedMap);
     }
 }

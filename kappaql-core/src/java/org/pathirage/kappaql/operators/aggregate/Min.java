@@ -18,18 +18,22 @@
 package org.pathirage.kappaql.operators.aggregate;
 
 import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamDefinition;
 import org.pathirage.kappaql.data.StreamElement;
+
+import java.util.Map;
 
 public class Min extends AggregateFunction {
 
-    public Min(String field, String alias){
+    public Min(String field, String alias, Map<String, StreamDefinition> inputStreamDefs){
         this.field = field;
         this.alias = alias;
         this.type = AggregateType.MIN;
+        this.inputStreamDefs = inputStreamDefs;
     }
 
     @Override
-    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
+    public void handle(String stream, StreamElement streamElement, MessageCollector messageCollector) {
 
     }
 }

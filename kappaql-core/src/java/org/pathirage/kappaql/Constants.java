@@ -25,6 +25,9 @@ public class Constants {
     public static final String CONF_SYSTEM = "org.pathirage.kappaql.system";
     public static final String CONF_DOWN_STREAM_TOPIC = "org.pathirage.kappaql.downstream.topic";
 
+    public static final String CONF_OPERATOR_INPUT_STREAMS = "org.pathirage.kappaql.input.streams.";
+    public static final String CONF_OPERATOR_OUTPUT_STREAMS = "org.pathirage.kappaql.output.streams.";
+
     public static final String CONF_WINDOW_RANGE = "org.pathirage.kappaql.window.range";
     public static final String CONF_WINDOW_RANGE_SLOT_SIZE = "org.pathirage.kappaql.window.range.slot.size";
     public static final String CONF_WINDOW_ROWS = "org.pathirage.kappaql.window.rows";

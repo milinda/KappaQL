@@ -18,18 +18,22 @@
 package org.pathirage.kappaql.operators.aggregate;
 
 import org.apache.samza.task.MessageCollector;
+import org.pathirage.kappaql.data.StreamDefinition;
 import org.pathirage.kappaql.data.StreamElement;
+
+import java.util.Map;
 
 public class Count extends AggregateFunction{
 
-    public Count(String field, String alias){
+    public Count(String field, String alias, Map<String, StreamDefinition> inputStreamDefs){
         this.field = field;
         this.alias = alias;
         this.type = AggregateType.COUNT;
+        this.inputStreamDefs = inputStreamDefs;
     }
 
     @Override
-    public void handle(StreamElement streamElement, MessageCollector messageCollector) {
+    public void handle(String stream, StreamElement streamElement, MessageCollector messageCollector) {
 
     }
 }

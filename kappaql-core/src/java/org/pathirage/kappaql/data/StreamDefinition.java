@@ -15,23 +15,32 @@
  *
  */
 
-package org.pathirage.kappaql.operators.aggregate;
-
-import org.apache.samza.task.MessageCollector;
-import org.pathirage.kappaql.data.StreamDefinition;
-import org.pathirage.kappaql.data.StreamElement;
+package org.pathirage.kappaql.data;
 
 import java.util.Map;
+import java.util.Set;
 
-public abstract class AggregateFunction {
+public class StreamDefinition {
 
-    protected AggregateType type;
+    private Map<String, FieldType> fieldTypeMap;
 
-    protected String field;
+    public StreamDefinition(Map<String, FieldType> fieldTypeMap){
+        this.fieldTypeMap = fieldTypeMap;
+    }
 
-    protected String alias;
+    public Set<String> getFields(){
+        return this.fieldTypeMap.keySet();
+    }
 
-    protected Map<String, StreamDefinition> inputStreamDefs;
+    public FieldType getType(String field){
+        return fieldTypeMap.get(field);
+    }
 
-    public void handle(String stream, StreamElement streamElement, MessageCollector messageCollector){}
+    public enum FieldType {
+        INTEGER,
+        STRING,
+        BOOL,
+        FLOAT,
+        TIME
+    }
 }

@@ -20,9 +20,13 @@ package org.pathirage.kappaql.operators;
 import org.apache.samza.config.Config;
 import org.pathirage.kappaql.Constants;
 import org.pathirage.kappaql.KappaQLException;
+import org.pathirage.kappaql.data.StreamDefinition;
+import org.pathirage.kappaql.utils.Utilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /* In KappaQL, query is transformed in to execution plan which consists of DAG of operators(Samza jobs) connected via
@@ -47,6 +51,12 @@ public abstract class Operator {
     /* Samza System */
     protected String system;
 
+    /* Definitions of input streams for this operator */
+    protected Map<String, StreamDefinition> inputStreams;
+
+    /* Definitions of output streams of this operator */
+    protected Map<String, StreamDefinition> outputStreams;
+
     protected void initOperator(OperatorType type){
         if(config == null){
             log.error(Constants.ERROR_UNABLE_TO_FIND_CONFIGURATION);
@@ -65,12 +75,35 @@ public abstract class Operator {
 
         String downStreamTopic = config.get(Constants.CONF_DOWN_STREAM_TOPIC, Constants.CONST_STR_UNDEFINED);
         if (downStreamTopic.equals(Constants.CONST_STR_UNDEFINED)) {
-            // TODO: Log
+            log.warn("Down stream topic undefined.");
         }
 
         this.downStreamTopic = downStreamTopic;
 
         this.system = config.get(Constants.CONF_SYSTEM, Constants.CONST_STR_DEFAULT_SYSTEM);
+
+        Config inputStreams = config.subset(Constants.CONF_OPERATOR_INPUT_STREAMS);
+        for(String inputStream : inputStreams.keySet()){
+            // TODO: How to handle undefined
+            Map<String, String> fields = Utilities.parseMap(inputStreams.get(inputStream));
+            Map<String, StreamDefinition.FieldType> fieldTypes = new HashMap<>();
+            for(Map.Entry<String, String> e : fields.entrySet()){
+                fieldTypes.put(e.getKey(), StreamDefinition.FieldType.valueOf(e.getValue()));
+            }
+
+            this.inputStreams.put(inputStream, new StreamDefinition(fieldTypes));
+        }
+
+        Config outputStreams = config.subset(Constants.CONF_OPERATOR_OUTPUT_STREAMS);
+        for(String outputStream : outputStreams.keySet()){
+            Map<String, String> fields = Utilities.parseMap(inputStreams.get(outputStream));
+            Map<String, StreamDefinition.FieldType> fieldTypes = new HashMap<>();
+            for(Map.Entry<String, String> e : fields.entrySet()){
+                fieldTypes.put(e.getKey(), StreamDefinition.FieldType.valueOf(e.getValue()));
+            }
+
+            this.outputStreams.put(outputStream, new StreamDefinition(fieldTypes));
+        }
     }
 
 

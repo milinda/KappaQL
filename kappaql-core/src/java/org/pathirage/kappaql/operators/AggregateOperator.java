@@ -40,7 +40,9 @@ public class AggregateOperator extends Operator implements StreamTask, InitableT
         Config aggregatesConfig = config.subset(Constants.CONF_AGGREGATE_AGGREGATES);
 
         for(int i = 0; i < aggregatesConfig.size(); i++){
-            aggregates.add(i, AggregateFunctionFactory.buildAggregateFunction(aggregatesConfig.get(Integer.toString(i), Constants.CONST_STR_UNDEFINED)));
+            aggregates.add(i, AggregateFunctionFactory.buildAggregateFunction(
+                    aggregatesConfig.get(Integer.toString(i), Constants.CONST_STR_UNDEFINED),
+                    this.inputStreams));
         }
     }
 
@@ -48,7 +50,7 @@ public class AggregateOperator extends Operator implements StreamTask, InitableT
     public void process(IncomingMessageEnvelope incomingMessageEnvelope,
                         MessageCollector messageCollector,
                         TaskCoordinator taskCoordinator) throws Exception {
-
+        String incoming = incomingMessageEnvelope.getSystemStreamPartition().getStream();
     }
 
 }
