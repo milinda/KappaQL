@@ -19,5 +19,11 @@
     > ```clojure
     > (select stream
     >     (fields [:name :firstname] :address :age)
-    >     (where {:age [< 34]}))
+    >     (where {:age (less-than 34)}))
     >```
+
+## Queries Supported in v0.1
+
+- Only **stream-to-stream** queries are supported. 
+- **select** with **where** clause and **projection** is supported.
+- *less-than*, *greater-than*, *equal*, *like*, *(greater-than|less-than)-or-equal* conditions composed with *AND* or *OR* is supported.
