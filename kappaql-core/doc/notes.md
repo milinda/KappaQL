@@ -15,3 +15,9 @@
     >     (ts :timestamp))
     > ```
     
+* How the queries looks like
+    > ```clojure
+    > (select stream
+    >     (fields [:name :firstname] :address :age)
+    >     (where {:age [< 34]}))
+    >```
