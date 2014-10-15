@@ -32,6 +32,7 @@
 ## Queries Supported in v0.2
 
 - In addition to v0.1 queries **group-by** and **aggregate** is supported.
+
     > ```clojure
     > (select stream
     >   (aggregate )
