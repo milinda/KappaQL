@@ -27,3 +27,13 @@
 - Only **stream-to-stream** queries are supported. 
 - **select** with **where** clause and **projection** is supported.
 - *less-than*, *greater-than*, *equal*, *like*, *(greater-than|less-than)-or-equal* conditions composed with *AND* or *OR* is supported.
+
+
+## Queries Supported in v0.2
+
+- In addition to v0.1 queries **group-by** and **aggregate** is supported.
+    > ```clojure
+    > (select stream
+    >   (aggregate )
+    >   (group-by )
+    > ```
