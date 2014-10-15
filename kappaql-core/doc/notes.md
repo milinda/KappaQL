@@ -8,7 +8,7 @@
     > And also which field contains the timestamp. In the first version its mandatory to have a timestamp field.
     > We can use something like follows.
     
-    > ```
+    > ```clojure
     > (defstream stream
     >     (fields [:name :string :address :string :age :integer :timestamp :long])
     >     (pk :id)
