@@ -31,10 +31,11 @@
 
 ## Queries Supported in v0.2
 
+- Aggregates support with **stream-to-relation** queries.
 - In addition to v0.1 queries **group-by** and **aggregate** is supported.
 
     > ```clojure
     > (select stream
     >   (aggregate )
-    >   (group-by )
+    >   (group-by ))
     > ```
