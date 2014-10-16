@@ -17,12 +17,34 @@
     > And also which field contains the timestamp. In the first version its mandatory to have a timestamp field.
     > We can use something like follows.
     
-    > ```
+    > ```clojure
     > (defstream stream
     >     (fields [:name :string :address :string :age :integer :timestamp :long])
     >     (pk :id)
     >     (ts :timestamp))
     > ```
     
+* How the queries looks like
+    > ```clojure
+    > (select stream
+    >     (fields [:name :firstname] :address :age)
+    >     (where {:age (less-than 34)}))
+    >```
 
-    
+## Queries Supported in v0.1
+
+- Only **stream-to-stream** queries are supported. 
+- **select** with **where** clause and **projection** is supported.
+- *less-than*, *greater-than*, *equal*, *like*, *(greater-than|less-than)-or-equal* conditions composed with *AND* or *OR* is supported.
+
+
+## Queries Supported in v0.2
+
+- Aggregates support with **stream-to-relation** queries.
+- In addition to v0.1 queries **group-by** and **aggregate** is supported.
+
+    > ```clojure
+    > (select stream
+    >   (aggregate )
+    >   (group-by ))
+    > ```
