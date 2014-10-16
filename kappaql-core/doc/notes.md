@@ -1,5 +1,6 @@
 # TODOS (10/15/2014)
 
+* Write a summary about CQL
 * Define minimal set of CQL constructs to support
 * Define set of samples which shows the usefulness of above subset
 * Design the DSL based on above
