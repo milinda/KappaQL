@@ -33,5 +33,5 @@ public abstract class AggregateFunction {
 
     protected Map<String, StreamDefinition> inputStreamDefs;
 
-    public void handle(String stream, StreamElement streamElement, MessageCollector messageCollector){}
+    public void handle(String stream, String key, StreamElement streamElement, MessageCollector messageCollector){}
 }

@@ -17,4 +17,6 @@
                  [com.google.guava/guava "18.0"]
                  [com.esotericsoftware/kryo "3.0.0"]]
   :source-paths      ["src/clojure"]
-  :java-source-paths ["src/java"])
+  :java-source-paths ["src/java"]
+  :test-paths ["test/clojure" "test/java"]
+  :profiles {:test {:resource-paths ["test/resources"]}})

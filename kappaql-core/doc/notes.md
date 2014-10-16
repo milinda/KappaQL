@@ -1,3 +1,12 @@
+# TODOS (10/15/2014)
+
+* Define minimal set of CQL constructs to support
+* Define set of samples which shows the usefulness of above subset
+* Design the DSL based on above
+* Define the internal representation of CQL
+* CQL to Execution Plan
+* Understand how IStream, DStream and RStream works and their semantics in CQL 
+
 # KappaQL Query Layer Design Notes
 
 * First problem is what is the serialization format of the events comes in to Kafka from outside world. For the 
@@ -14,4 +23,6 @@
     >     (pk :id)
     >     (ts :timestamp))
     > ```
+    
+
     

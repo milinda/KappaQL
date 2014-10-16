@@ -33,7 +33,7 @@ public class Max extends AggregateFunction {
     }
 
     @Override
-    public void handle(String stream, StreamElement streamElement, MessageCollector messageCollector) {
+    public void handle(String stream, String key, StreamElement streamElement, MessageCollector messageCollector) {
 
     }
 }

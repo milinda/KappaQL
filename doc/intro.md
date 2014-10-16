@@ -93,6 +93,30 @@ Whole architecture is based around idea of a log. Whats the point?
 
 ## Design and Implementation
 
+### TODOS (10/15/2014)
+
+* Define minimal set of CQL constructs to support
+* Define set of samples which shows the usefulness of above subset
+* Design the DSL based on above
+* Define the internal representation of CQL
+* CQL to Execution Plan
+* Understand how IStream, DStream and RStream works and their semantics in CQL 
+
+### KappaQL Query Layer Design Notes
+
+* First problem is what is the serialization format of the events comes in to Kafka from outside world. For the 
+  prototype we can use flat JSON objects.
+* Then how we are going to define the stream:Given that we choose JSON as the serialization format above, we can just use a mapping of fields to their types as the stream definition. Then the problem is how we annotate the ID/Primary Key of this stream in the definition.And also which field contains the timestamp. In the first version its mandatory to have a timestamp field.We can use something like follows.
+    
+     ```clojure
+     (defstream stream
+         (fields [:name :string :address :string :age :integer :timestamp :long])
+         (pk :id)
+         (ts :timestamp))
+     ```
+    
+
+
 
 ### User Interaction (1st Prototype as of 10/02/2014)
 

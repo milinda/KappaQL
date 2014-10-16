@@ -86,7 +86,7 @@ public class GroupByOperator extends Operator implements StreamTask, InitableTas
 
         messageCollector.send(new OutgoingMessageEnvelope(new SystemStream(system, downStreamTopic),
                 partitionKey,
-                se.getId(),
+                partitionKey,
                 se));
     }
 }
