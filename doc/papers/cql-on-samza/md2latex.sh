@@ -39,7 +39,7 @@ cp -r $cwd/*.bib $build
 cd $build
 
 # Build PDF
-latexmk final.tex -pdf -pdflatex="pdflatex -interaction=nonstopmode"
+latexmk final.tex -pdf -pdflatex="pdflatex -interaction=nonstopmode --shell-escape"
 
 # Copy the PDF back
 cp final.pdf $cwd
